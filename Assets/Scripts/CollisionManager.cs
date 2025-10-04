@@ -23,16 +23,26 @@ public class CollisionManager : MonoBehaviour, IGameSystem
 
     public void tick()
     {
-        // Detect collisions
-        foreach (ICollider colA in colliders)
-        {
-            foreach (ICollider colB in colliders)
+        // // Detect collisions
+        // foreach (ICollider colA in colliders)
+        // {
+        //     foreach (ICollider colB in colliders)
+        //     {
+        //         if (colA != colB && colA.Intersects(colB, out Collision collision))
+        //         {
+        //             collisions.Add(collision);
+        //             // colA.OnCollision(collision);
+        //             // colB.OnCollision(collision);
+        //         }
+        //     }
+        // }
+        foreach (GameObject pinball in GameManager.instance.pinballs)
+        { 
+            foreach (ICollider col in colliders)
             {
-                if (colA != colB && colA.Intersects(colB, out Collision collision))
+                if (pinball.GetComponent<ICollider>() != col && pinball.GetComponent<ICollider>().Intersects(col, out Collision collision))
                 {
                     collisions.Add(collision);
-                    // colA.OnCollision(collision);
-                    // colB.OnCollision(collision);
                 }
             }
         }

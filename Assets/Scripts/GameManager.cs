@@ -1,8 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public List<GameObject> pinballs = new List<GameObject>();
+    public int pinballCount = 0;
+    public GameObject pinballPrefab;
+    public GameObject pinballSpawnPoint;
 
     void Awake()
     {
@@ -28,5 +33,14 @@ public class GameManager : MonoBehaviour
         CollisionManager.instance.RemoveCollider(obj.GetComponent<ICollider>());
 
         Destroy(obj);
+    }
+
+    public void TrySpawnPinball()
+    {
+        if (pinballCount < 10)
+        { 
+            pinballs.Add(Instantiate(pinballPrefab, pinballSpawnPoint.transform.position, Quaternion.identity));
+            pinballCount++;
+        }
     }
 }
