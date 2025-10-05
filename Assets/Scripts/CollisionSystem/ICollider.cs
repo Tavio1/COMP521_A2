@@ -7,8 +7,10 @@ public abstract class ICollider : MonoBehaviour
     public bool isStatic = false;
     [SerializeField]
     public bool isTrigger = false;
+    [Range(0f, 2f)]
+    public float restitution = 1f;
 
-    void Start()
+    virtual public void Start()
     {
         CollisionManager.instance.AddCollider(this);
     }
