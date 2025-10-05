@@ -47,4 +47,10 @@ public class RigidBody : MonoBehaviour
         Vector3 impulseVelocityChange = impulse;
         velocity += impulseVelocityChange;
     }
+
+    void OnDrawGizmos()
+    { 
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + velocity);
+    }
 }
