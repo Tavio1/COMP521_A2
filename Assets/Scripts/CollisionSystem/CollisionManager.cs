@@ -53,24 +53,30 @@ public class CollisionManager : MonoBehaviour, IGameSystem
         {
             if (!collision.obj.GetComponent<ICollider>().isStatic)
             {
+                if (collision.other.CompareTag("DestroyPinball") && collision.obj.CompareTag("Pinball"))
+                {
+                    GameManager.instance.DeleteObject(collision.obj);
+                    continue;
+                }
                 try
                 {
                     Vector3 vNeg = collision.obj.transform.position - collision.point;
                     Vector3 vNegNorm = Vector3.Dot(vNeg, collision.normal) * collision.normal;
                     Vector3 vPosNorm = -vNegNorm;
                     float j = (1f + collision.other.GetComponent<ICollider>().restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
+                    //Vector3 impulse = j * collision.normal / Time.fixedDeltaTime; // Avoid div by zero
                     Vector3 impulse = j * collision.normal / Mathf.Max((Time.fixedDeltaTime - collision.time), 0.0001f); // Avoid div by zero
                     collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
                     collision.obj.transform.position = collision.point;
 
-                    //Debug.Log("Collision at " +  collision.point + " with normal: " + collision.normal );
+
+                    //Debug.Log("Collision at " +  collision.point + " with normal: " + collision.normal + ", j: " + j + ", impulse: " + impulse );
                 }
                 catch
                 {
                     throw new System.Exception("No RigidBody attached to non-static object");
                 }
             }
-            collision.obj.GetComponent<ICollider>().OnCollision(collision);
         }
 
         collisions.Clear();

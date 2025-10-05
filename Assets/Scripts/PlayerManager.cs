@@ -36,7 +36,7 @@ public class PlayerManager : MonoBehaviour
         rightBumper.transform.localRotation = Quaternion.Euler(0, Mathf.Clamp(rightBumper.transform.localEulerAngles.y, rightBumperRotation, rightBumperRotation + 45), 0);
 
         // Spawn pinball
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Space))
             GameManager.instance.TrySpawnPinball();
     }
 

@@ -56,10 +56,13 @@ public class PinballCollider : CircleCollider
 
     private Collision IntersectsWithSquare(BoxCollider other)
     {
-        float sphereMaxX = transform.position.x + radius;
-        float sphereMinX = transform.position.x - radius;
-        float sphereMaxZ = transform.position.z + radius;
-        float sphereMinZ = transform.position.z - radius;
+        Vector3 rotatedPos = other.WorldToLocal(transform.position);
+        Vector3 rotatedLastPos = other.WorldToLocal(rb.lastPos);
+
+        float sphereMaxX = rotatedPos.x + radius;
+        float sphereMinX = rotatedPos.x - radius;
+        float sphereMaxZ = rotatedPos.z + radius;
+        float sphereMinZ = rotatedPos.z - radius;
 
         // No collision, return null
         if (sphereMaxX < other.minCorner.x || sphereMinX > other.maxCorner.x ||
@@ -71,14 +74,14 @@ public class PinballCollider : CircleCollider
         Vector3 collisionNormal = Vector3.zero;
         float collisionTime = 1; // Currently on 0-1 from beginnging to end, will convert to absolute time after
 
-        Vector3 v = rb.transform.position - rb.lastPos;
+        Vector3 v = rotatedPos - rotatedLastPos;
 
         // Check each side individually, find the earliest collision
 
         // Left 
-        if (rb.lastPos.x + radius <= other.minCorner.x && sphereMaxX >= other.minCorner.x && v.x > 0)
+        if (rotatedLastPos.x + radius <= other.minCorner.x && sphereMaxX >= other.minCorner.x && v.x > 0)
         {
-            float t = (other.minCorner.x - (rb.lastPos.x + radius)) / v.x;
+            float t = (other.minCorner.x - (rotatedLastPos.x + radius)) / v.x;
             if (t >= 0 && t <= 1 && t < collisionTime)
             {
                 collisionTime = t;
@@ -87,9 +90,9 @@ public class PinballCollider : CircleCollider
         }
 
         // Right
-        if (rb.lastPos.x - radius >= other.maxCorner.x && sphereMinX <= other.maxCorner.x && v.x < 0)
+        if (rotatedLastPos.x - radius >= other.maxCorner.x && sphereMinX <= other.maxCorner.x && v.x < 0)
         {
-            float t = (other.maxCorner.x - (rb.lastPos.x - radius)) / v.x;
+            float t = (other.maxCorner.x - (rotatedLastPos.x - radius)) / v.x;
             if (t >= 0 && t <= 1 && t < collisionTime)
             {
                 collisionTime = t;
@@ -98,9 +101,9 @@ public class PinballCollider : CircleCollider
         }
 
         // Bottom 
-        if (rb.lastPos.z + radius <= other.minCorner.z && sphereMaxZ >= other.minCorner.z && v.z > 0)
+        if (rotatedLastPos.z + radius <= other.minCorner.z && sphereMaxZ >= other.minCorner.z && v.z > 0)
         {
-            float t = (other.minCorner.z - (rb.lastPos.z + radius)) / v.z;
+            float t = (other.minCorner.z - (rotatedLastPos.z + radius)) / v.z;
             if (t >= 0 && t <= 1 && t < collisionTime)
             {
                 collisionTime = t;
@@ -109,9 +112,9 @@ public class PinballCollider : CircleCollider
         }
 
         // Top
-        if (rb.lastPos.z - radius >= other.maxCorner.z && sphereMinZ <= other.maxCorner.z && v.z < 0)
+        if (rotatedLastPos.z - radius >= other.maxCorner.z && sphereMinZ <= other.maxCorner.z && v.z < 0)
         {
-            float t = (other.maxCorner.z - (rb.lastPos.z - radius)) / v.z;
+            float t = (other.maxCorner.z - (rotatedLastPos.z - radius)) / v.z;
             if (t >= 0 && t <= 1 && t < collisionTime)
             {
                 collisionTime = t;
@@ -120,8 +123,13 @@ public class PinballCollider : CircleCollider
         }
 
         // Create collision
-        collisionPoint = Vector3.Lerp(rb.lastPos, rb.transform.position, collisionTime);
+        collisionPoint = Vector3.Lerp(rotatedLastPos, rotatedPos, collisionTime);
+        collisionPoint = other.LocalToWorld(collisionPoint);
+
+        collisionNormal = other.transform.rotation * collisionNormal;
+
         collisionTime = collisionTime * Time.fixedDeltaTime;
+
         Collision collision = new Collision(this.gameObject, other.gameObject, collisionPoint, collisionNormal, collisionTime);
 
         return collision;

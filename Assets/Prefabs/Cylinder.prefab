@@ -133,4 +133,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 1
   isTrigger: 0
+  restitution: 1.5
   radius: 0.75

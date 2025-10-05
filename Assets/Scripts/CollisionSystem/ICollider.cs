@@ -5,8 +5,6 @@ public abstract class ICollider : MonoBehaviour
 {
     [SerializeField]
     public bool isStatic = false;
-    [SerializeField]
-    public bool isTrigger = false;
     [Range(0f, 2f)]
     public float restitution = 1f;
 
@@ -15,7 +13,6 @@ public abstract class ICollider : MonoBehaviour
         CollisionManager.instance.AddCollider(this);
     }
 
-    public void OnCollision(Collision collision) { }
     //public abstract bool IntersectsWithSquare(SquareCollider other);
     //public abstract bool IntersectsWithTriangle(TriangleCollider other);
 
