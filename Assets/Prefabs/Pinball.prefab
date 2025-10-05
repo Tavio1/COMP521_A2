@@ -100,9 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc96308e69a51ae4695e09d698462add, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: 1
+  mass: 1
   velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
-  mass: 1
   lastPos: {x: 0, y: 0, z: 0}
 --- !u!114 &-5364395315116425696
 MonoBehaviour:
@@ -117,6 +118,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 0
-  isTrigger: 0
   restitution: 1
   radius: 0.5
