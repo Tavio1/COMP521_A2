@@ -35,15 +35,16 @@ public class PinballCollider : CircleCollider
         if (difference.magnitude > (radius + other.radius)) return null;
 
         // Find collision point, normal, and time
-        Vector3 v = rb.lastPos - rb.transform.position;
+        Vector3 v = rb.transform.position - rb.lastPos;
         Vector3 vNormalized = v.normalized;
-        Vector3 D = Vector3.Dot(difference, vNormalized) * vNormalized;
-        Vector3 F = difference - D;
+        Vector3 C = other.transform.position - rb.lastPos;
+        Vector3 D = Vector3.Dot(C, vNormalized) * vNormalized;
+        Vector3 F = C - D;
         float tLength = Mathf.Sqrt(Mathf.Pow(radius + other.radius, 2) - F.sqrMagnitude);
-        Vector3 T = new Vector3(-vNormalized.z, 0, vNormalized.x).normalized * tLength;
-        Vector3 collisionPoint = rb.lastPos + D - T;
-        Vector3 collisionNormal = (other.transform.position - collisionPoint).normalized;
-        float collisionTime = (D.magnitude - tLength) / v.magnitude * Time.deltaTime;
+        Vector3 T = -vNormalized * tLength;
+        Vector3 collisionPoint = rb.lastPos + D + T;
+        Vector3 collisionNormal = (collisionPoint - other.transform.position).normalized;
+        float collisionTime = ((D.magnitude - tLength) / v.magnitude) * Time.fixedDeltaTime;
 
         // Create collision
         Collision collision = new Collision(this.gameObject, other.gameObject, collisionPoint, collisionNormal, collisionTime);

@@ -55,16 +55,14 @@ public class CollisionManager : MonoBehaviour, IGameSystem
             {
                 try
                 {
-                    //Vector3 vNeg = collision.obj.GetComponent<RigidBody>().lastPos - collision.obj.transform.position;
                     Vector3 vNeg = collision.obj.transform.position - collision.point;
                     Vector3 vNegNorm = Vector3.Dot(vNeg, collision.normal) * collision.normal;
                     Vector3 vPosNorm = -vNegNorm;
-                    float j = -2 * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
-                    Vector3 impulse = j * collision.normal;
-                    //collision.obj.transform.position = collision.point;
+                    float j = 2 * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
+                    Vector3 impulse = j * collision.normal / (Time.fixedDeltaTime - collision.time);
                     collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
-                    //debugCollisions.Add(collision);
-                    Debug.Log("Collision!");
+
+                    //Debug.Log("Collision at " +  collision.point + " with normal: " + collision.normal );
                 }
                 catch
                 {
