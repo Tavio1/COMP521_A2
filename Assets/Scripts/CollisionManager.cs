@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public class CollisionManager : MonoBehaviour, IGameSystem
 
     public List<ICollider> colliders = new List<ICollider>();
     public List<Collision> collisions = new List<Collision>();
-
+    public List<Collision> debugCollisions = new List<Collision>();
+ 
     void Awake()
     {
         if (instance == null)
@@ -37,10 +39,10 @@ public class CollisionManager : MonoBehaviour, IGameSystem
         //     }
         // }
         foreach (GameObject pinball in GameManager.instance.pinballs)
-        { 
+        {
             foreach (ICollider col in colliders)
             {
-                if (pinball.GetComponent<ICollider>() != col && pinball.GetComponent<ICollider>().Intersects(col, out Collision collision))
+                if (pinball.GetComponent<ICollider>() != col && pinball.GetComponent<PinballCollider>().Intersects(col, out Collision collision))
                 {
                     collisions.Add(collision);
                 }
@@ -53,7 +55,16 @@ public class CollisionManager : MonoBehaviour, IGameSystem
             {
                 try
                 {
-                    collision.obj.GetComponent<RigidBody>().AddImpulse(collision.normal * collision.obj.GetComponent<RigidBody>().mass);
+                    //Vector3 vNeg = collision.obj.GetComponent<RigidBody>().lastPos - collision.obj.transform.position;
+                    Vector3 vNeg = collision.obj.transform.position - collision.point;
+                    Vector3 vNegNorm = Vector3.Dot(vNeg, collision.normal) * collision.normal;
+                    Vector3 vPosNorm = -vNegNorm;
+                    float j = -2 * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
+                    Vector3 impulse = j * collision.normal;
+                    //collision.obj.transform.position = collision.point;
+                    collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
+                    //debugCollisions.Add(collision);
+                    Debug.Log("Collision!");
                 }
                 catch
                 {

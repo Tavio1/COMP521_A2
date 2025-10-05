@@ -40,11 +40,11 @@ public class RigidBody : MonoBehaviour
         Vector3 forceAcceleration = force / mass;
         acceleration += forceAcceleration;
     }
-    
+
     public void AddImpulse(Vector3 impulse)
     {
         // Impulse changes velocity directly
-        Vector3 impulseVelocityChange = impulse / mass;
+        Vector3 impulseVelocityChange = impulse;
         velocity += impulseVelocityChange;
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3806111093628421601}
   - component: {fileID: 5004677260997602988}
   - component: {fileID: 5901036202558729401}
-  - component: {fileID: 2364421667398717314}
+  - component: {fileID: -5364395315116425696}
   m_Layer: 0
   m_Name: Pinball
   m_TagString: Untagged
@@ -104,7 +104,7 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   mass: 1
   lastPos: {x: 0, y: 0, z: 0}
---- !u!114 &2364421667398717314
+--- !u!114 &-5364395315116425696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,9 +113,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6060270488258517582}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ed1c36b8f676534fa8fa5fa602589f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 51c1bf00530a8834499532a84b0e9f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 0
   isTrigger: 0
-  radius: 1
+  radius: 0.5

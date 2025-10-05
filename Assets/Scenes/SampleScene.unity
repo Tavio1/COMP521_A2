@@ -2419,10 +2419,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7878213513350499454, guid: 2fceabd301f9d9d43880866f4fcfad4b, type: 3}
-      propertyPath: radius
-      value: 1.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2442,7 +2438,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4233261663046754264, guid: 27ae6c98fe90da24a9065c665fd2854d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 4233261663046754264, guid: 27ae6c98fe90da24a9065c665fd2854d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2450,7 +2446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4233261663046754264, guid: 27ae6c98fe90da24a9065c665fd2854d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.44
       objectReference: {fileID: 0}
     - target: {fileID: 4233261663046754264, guid: 27ae6c98fe90da24a9065c665fd2854d, type: 3}
       propertyPath: m_LocalRotation.w
