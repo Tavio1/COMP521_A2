@@ -1,20 +1,23 @@
 using UnityEngine;
-using UnityEngine.AI;
 
+// Defines a pinball
 public class PinballCollider : CircleCollider
 {
     private RigidBody rb;
 
+    // Get the rigidbody of the pinball
     public override void Start()
     {
         base.Start();
         rb = GetComponent<RigidBody>();
     }
 
+    // Detect intersections with another collider, outputs the collision event if there is one
     public bool Intersects(ICollider other, out Collision collision)
     {
         collision = null;
 
+        // Detect collision differently depending on the type of collider it is checking
         switch (other)
         {
             case PinballCollider otherPinball:
@@ -31,6 +34,7 @@ public class PinballCollider : CircleCollider
         }
     }
 
+    // Detects intersection with another circle
     private Collision IntersectsWithCircle(CircleCollider other, bool otherIsPinball = false)
     {
         Vector3 difference = other.transform.position - transform.position;
@@ -38,9 +42,12 @@ public class PinballCollider : CircleCollider
         // No collision, return null
         if (difference.magnitude > (radius + other.radius)) return null;
 
-        // Find collision point, normal, and time
+        // If doing pinball-pinball collision, simplify to one pinball moving using the velocities of both
         Vector3 v = rb.velocity;
         if (otherIsPinball) v -= other.GetComponent<RigidBody>().velocity;
+
+        
+        // Find collision point, normal, and time
         Vector3 vNormalized = v.normalized;
         Vector3 C = other.transform.position - rb.lastPos;
         Vector3 D = Vector3.Dot(C, vNormalized) * vNormalized;
@@ -57,8 +64,10 @@ public class PinballCollider : CircleCollider
         return collision;
     }
 
+    // Detects intersection with an OBB
     private Collision IntersectsWithSquare(BoxCollider other)
     {
+        // Gets positions in the local coordinates
         Vector3 rotatedPos = other.WorldToLocal(transform.position);
         Vector3 rotatedLastPos = other.WorldToLocal(rb.lastPos);
 
@@ -77,18 +86,17 @@ public class PinballCollider : CircleCollider
         Vector3 collisionNormal = Vector3.zero;
         float collisionTime = 1; // Currently on 0-1 from beginnging to end, will convert to absolute time after
 
-        // Chek if pinball was already inside the box
-        if ((rotatedLastPos.x >= other.minCorner.x - radius && rotatedLastPos.x <= other.maxCorner.x + radius ) &&
+        // If pinball was already inside the box, return normal of closest edge
+        if ((rotatedLastPos.x >= other.minCorner.x - radius && rotatedLastPos.x <= other.maxCorner.x + radius) &&
             (rotatedLastPos.z >= other.minCorner.z - radius && rotatedLastPos.z <= other.maxCorner.z + radius))
         {
-            // Debug.Log("Pinball started inside square");
             // Distances to each of the 4 sides
             float dxMin = rotatedLastPos.x - other.minCorner.x;   // left face
             float dxMax = other.maxCorner.x - rotatedLastPos.x;   // right face
             float dzMin = rotatedLastPos.z - other.minCorner.z;   // bottom face
             float dzMax = other.maxCorner.z - rotatedLastPos.z;   // top face
 
-            // Find the smallest distance
+            // Find the smallest distance, store the relevant collision normal
             float minDist = dxMin;
             collisionNormal = Vector3.left;
 
@@ -96,6 +104,7 @@ public class PinballCollider : CircleCollider
             if (dzMin < minDist) { minDist = dzMin; collisionNormal = Vector3.back; }
             if (dzMax < minDist) { minDist = dzMax; collisionNormal = Vector3.forward; }
 
+            // Collision point was instant
             collisionPoint = rotatedLastPos;
             collisionTime = 0;
         }
@@ -152,8 +161,7 @@ public class PinballCollider : CircleCollider
 
             // Check corners
             for (int i = 0; i < other.corners.Length; i++)
-            { 
-                
+            {
                 Vector3 corner = other.corners[i];
                 corner = new Vector3(corner.x, 0, corner.z);
 
@@ -194,9 +202,7 @@ public class PinballCollider : CircleCollider
         // Convert to actual time step, not a percent
         collisionTime = collisionTime * Time.fixedDeltaTime;
 
-        // if (collisionNormal.Equals(Vector3.zero))
-        //     Debug.Log("lastPos: " + rotatedLastPos + " boxMax: " + other.maxCorner + " boxMin: " + other.minCorner  );
-
+        // Create and return the collision
         Collision collision = new Collision(this.gameObject, other.gameObject, collisionPoint, collisionNormal, collisionTime);
 
         return collision;

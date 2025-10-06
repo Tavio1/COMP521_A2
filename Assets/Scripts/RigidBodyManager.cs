@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Manages all rigidbody motion
 public class RigidBodyManager : MonoBehaviour, IGameSystem
 {
     public static RigidBodyManager instance;
-    private List<RigidBody> rigidBodies = new List<RigidBody>();
-    public GameObject gravity;
-    public float maxVelocity;
+    private List<RigidBody> rigidBodies = new List<RigidBody>(); // List of rigidbodies in the system
+    public GameObject gravity; // Gravity vector
+    public float maxVelocity; // Max velocity allowed by the system
 
+    // Singleton pattern setup
     void Awake()
     {
         if (instance == null)
@@ -20,6 +22,7 @@ public class RigidBodyManager : MonoBehaviour, IGameSystem
         }
     }
 
+    // Update all rigidbodies
     public void tick()
     {
         foreach (RigidBody rb in rigidBodies)
@@ -30,6 +33,7 @@ public class RigidBodyManager : MonoBehaviour, IGameSystem
         }
     }
 
+    // Add a rigidbody to the system
     public void AddRigidBody(RigidBody rb)
     {
         if (!rigidBodies.Contains(rb))
@@ -37,7 +41,8 @@ public class RigidBodyManager : MonoBehaviour, IGameSystem
             rigidBodies.Add(rb);
         }
     }
-    
+
+    // Remove a rigidbody from the system
     public void RemoveRigidBody(RigidBody rb)
     {
         if (rigidBodies.Contains(rb))

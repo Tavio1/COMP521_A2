@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Represents the rigidbody physics of an object
 public class RigidBody : MonoBehaviour
 {
-    public bool gravity = false;
+    public bool gravity = false; // is it affected by gravity?
     public float mass = 1.0f;
 
     [HideInInspector]
@@ -22,9 +23,11 @@ public class RigidBody : MonoBehaviour
         acceleration = Vector3.zero;
         lastPos = transform.position;
 
+        // Add all rigidbodies to the rigidbody system
         RigidBodyManager.instance.AddRigidBody(this);
     }
 
+    // Update the rigidbody from the last frame
     public void UpdateRigidBody(float deltaTime)
     {
         // Store the previous position
@@ -33,6 +36,7 @@ public class RigidBody : MonoBehaviour
         // Update velocity based on acceleration
         velocity += acceleration * deltaTime;
 
+        // Add all accumulated impulses from the last frame
         foreach (Vector3 impulse in accumulatedImpulses)
             velocity += impulse;
 
@@ -48,23 +52,15 @@ public class RigidBody : MonoBehaviour
 
     }
 
-    public void ApplyForce(Vector3 force)
-    {
-        // F = m * a => a = F / m
-        Vector3 forceAcceleration = force / mass;
-        acceleration += forceAcceleration;
-    }
-
+    // Add impulse force
     public void AddImpulse(Vector3 impulse)
     {
-        // Impulse changes velocity directly
-        //Vector3 impulseVelocityChange = impulse;
-        //velocity += impulseVelocityChange;
         accumulatedImpulses.Add(impulse);
     }
 
+    // Draw the velocity of the rigidbody    
     void OnDrawGizmos()
-    { 
+    {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + velocity);
     }

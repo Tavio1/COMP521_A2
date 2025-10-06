@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Manages player inputs
 public class PlayerManager : MonoBehaviour, IGameSystem
 {
     public static PlayerManager instance;
@@ -41,16 +42,17 @@ public class PlayerManager : MonoBehaviour, IGameSystem
             }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Store start rotation of the bumpers
     void Start()
     {
         leftBumperRotation = leftBumper.transform.localEulerAngles.y;
         rightBumperRotation = rightBumper.transform.localEulerAngles.y;
     }
 
-    // Update is called once per frame
+    // Test for inputs
     void Update()
     {
+        // Store inputs related to movement to be ticked in proper time
         leftBumperActive = Input.GetKey(KeyCode.A);
         rightBumperActive = Input.GetKey(KeyCode.D);
         isShaking = Input.GetKey(KeyCode.Z);
@@ -59,11 +61,13 @@ public class PlayerManager : MonoBehaviour, IGameSystem
         if (Input.GetKeyDown(KeyCode.Space))
             GameManager.instance.TrySpawnPinball();
 
+        // Clear all existing pinballs 
         if (Input.GetKeyDown(KeyCode.Q))
             foreach (GameObject pinball in GameManager.instance.pinballs)
                 GameManager.instance.DeleteObject(pinball);
     }
 
+    // Singleton pattern setup
     void Awake()
     {
         if (instance == null)
