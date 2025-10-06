@@ -219,7 +219,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &7197565
@@ -295,9 +296,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 32360246}
+  - component: {fileID: 32360248}
+  - component: {fileID: 32360247}
   m_Layer: 0
   m_Name: Right Bumper
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -321,6 +324,40 @@ Transform:
   - {fileID: 1114896390}
   m_Father: {fileID: 1108873363}
   m_LocalEulerAnglesHint: {x: 0, y: 25, z: 0}
+--- !u!114 &32360247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32360245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e098b34f76b204680da7bcea3836d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bumperCollider: {fileID: 1871346374}
+  mat: {fileID: 2100000, guid: d50162a9a3ffbce4897e295f5469a73a, type: 2}
+  collidingMat: {fileID: 2100000, guid: 4d25b46695ef12447b2025b23f1abc03, type: 2}
+--- !u!114 &32360248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32360245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc96308e69a51ae4695e09d698462add, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 0
+  mass: 1
+  velocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  acceleration: {x: 0, y: 0, z: 0}
+  lastPos: {x: 0, y: 0, z: 0}
+  lastRot: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &194173467
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,9 +367,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 194173468}
+  - component: {fileID: 194173470}
+  - component: {fileID: 194173469}
   m_Layer: 0
   m_Name: Left Bumper
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -356,6 +395,40 @@ Transform:
   - {fileID: 1032712609}
   m_Father: {fileID: 1588798514}
   m_LocalEulerAnglesHint: {x: 0, y: 65, z: 0}
+--- !u!114 &194173469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194173467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e098b34f76b204680da7bcea3836d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bumperCollider: {fileID: 2009257044}
+  mat: {fileID: 2100000, guid: d50162a9a3ffbce4897e295f5469a73a, type: 2}
+  collidingMat: {fileID: 2100000, guid: 4d25b46695ef12447b2025b23f1abc03, type: 2}
+--- !u!114 &194173470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194173467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc96308e69a51ae4695e09d698462add, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 0
+  mass: 1
+  velocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  acceleration: {x: 0, y: 0, z: 0}
+  lastPos: {x: 0, y: 0, z: 0}
+  lastRot: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,7 +792,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &430765923
@@ -769,7 +843,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!23 &430765926
@@ -872,7 +947,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!23 &467844804
@@ -1171,7 +1247,7 @@ GameObject:
   - component: {fileID: 914071017}
   m_Layer: 0
   m_Name: Small Circle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1332,7 +1408,7 @@ GameObject:
   - component: {fileID: 985536360}
   m_Layer: 0
   m_Name: Small Circle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1418,7 +1494,7 @@ GameObject:
   - component: {fileID: 1032712610}
   m_Layer: 0
   m_Name: Bottom Rectangle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1536,7 +1612,7 @@ GameObject:
   - component: {fileID: 1114896391}
   m_Layer: 0
   m_Name: Bottom Rectangle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1741,7 +1817,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &1378422283
@@ -1792,6 +1869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 1
   restitution: 0.5
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!23 &1378422286
@@ -2085,7 +2163,7 @@ GameObject:
   - component: {fileID: 1505767540}
   m_Layer: 0
   m_Name: Big Circle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2218,7 +2296,7 @@ GameObject:
   - component: {fileID: 1552138098}
   m_Layer: 0
   m_Name: Big Circle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2391,7 +2469,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &1579982202
@@ -2585,7 +2664,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 0.5
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!23 &1781465508
@@ -2660,7 +2740,7 @@ GameObject:
   - component: {fileID: 1871346374}
   m_Layer: 0
   m_Name: Top Rectangle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2745,8 +2825,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4714010b44018a54b90ed3be1c5024e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 1
-  restitution: 1
+  isStatic: 0
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &2009257040
@@ -2763,7 +2844,7 @@ GameObject:
   - component: {fileID: 2009257044}
   m_Layer: 0
   m_Name: Top Rectangle
-  m_TagString: Untagged
+  m_TagString: Bumper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2848,8 +2929,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4714010b44018a54b90ed3be1c5024e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 1
-  restitution: 1
+  isStatic: 0
+  restitution: 0.9
+  collidingWith: []
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
 --- !u!1 &2117111426
@@ -2937,6 +3019,10 @@ PrefabInstance:
     - target: {fileID: 1761136888155532645, guid: 2fceabd301f9d9d43880866f4fcfad4b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7878213513350499454, guid: 2fceabd301f9d9d43880866f4fcfad4b, type: 3}
+      propertyPath: restitution
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
