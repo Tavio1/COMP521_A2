@@ -36,6 +36,9 @@ public class RigidBody : MonoBehaviour
         foreach (Vector3 impulse in accumulatedImpulses)
             velocity += impulse;
 
+        // Clamp velocity
+        velocity = Vector3.ClampMagnitude(velocity, RigidBodyManager.instance.maxVelocity);
+
         // Update position based on velocity
         transform.position += velocity * deltaTime;
 

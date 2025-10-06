@@ -6,6 +6,7 @@ public class RigidBodyManager : MonoBehaviour, IGameSystem
     public static RigidBodyManager instance;
     private List<RigidBody> rigidBodies = new List<RigidBody>();
     public GameObject gravity;
+    public float maxVelocity;
 
     void Awake()
     {
