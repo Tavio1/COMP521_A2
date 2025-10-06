@@ -9,10 +9,14 @@ public class GameManager : MonoBehaviour, IGameSystem
     [HideInInspector]
     public int pinballCount = 0;
     public GameObject pinballPrefab;
-    public GameObject pinballSpawnPoint;
     private List<GameObject> objectsToDestroy = new List<GameObject>();
     public int ticks = 0;
     private int pinballsSpawned = 0;
+
+    [Header("Debug")]
+    public bool spawnHazards = true;
+    public bool fixedPinballSpawn = false;
+    public GameObject pinballSpawnPoint;
 
     [Header("Hazard Spawning")]
     public GameObject hazardParent;
@@ -35,6 +39,8 @@ public class GameManager : MonoBehaviour, IGameSystem
 
     void Start()
     {
+        if (!spawnHazards) return;
+
         Vector3 selectedPos = Vector3.zero;
         bool posValid = false;
 
@@ -69,7 +75,8 @@ public class GameManager : MonoBehaviour, IGameSystem
 
     private Vector3 GeneratePinballSpawn()
     {
-        return new Vector3(0.5f + (Random.Range(0, 2) * 8 + (Random.Range(0f, 4))), 0, 28f);
+        return fixedPinballSpawn ? pinballSpawnPoint.transform.position :
+                    new Vector3(0.5f + (Random.Range(0, 2) * 8 + (Random.Range(0f, 4))), 0, 28f);
     }
 
     void FixedUpdate()
