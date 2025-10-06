@@ -25,24 +25,13 @@ public class CollisionManager : MonoBehaviour, IGameSystem
 
     public void tick()
     {
-        // // Detect collisions
-        // foreach (ICollider colA in colliders)
-        // {
-        //     foreach (ICollider colB in colliders)
-        //     {
-        //         if (colA != colB && colA.Intersects(colB, out Collision collision))
-        //         {
-        //             collisions.Add(collision);
-        //             // colA.OnCollision(collision);
-        //             // colB.OnCollision(collision);
-        //         }
-        //     }
-        // }
+        // Detect collisions b/w pinballs and other objects
         foreach (GameObject pinball in GameManager.instance.pinballs)
         {
             foreach (ICollider col in colliders)
             {
-                if (pinball.GetComponent<ICollider>() != col && pinball.GetComponent<PinballCollider>().Intersects(col, out Collision collision))
+                if (pinball.GetComponent<ICollider>() == col) continue;
+                if (pinball.GetComponent<PinballCollider>().Intersects(col, out Collision collision))
                 {
                     collisions.Add(collision);
                 }
@@ -51,21 +40,24 @@ public class CollisionManager : MonoBehaviour, IGameSystem
 
         foreach (Collision collision in collisions)
         {
-            if (!collision.obj.GetComponent<ICollider>().isStatic)
+            // Destroy pinball if collides with hazard
+            if (collision.other.CompareTag("DestroyPinball") && collision.obj.CompareTag("Pinball"))
             {
-                if (collision.other.CompareTag("DestroyPinball") && collision.obj.CompareTag("Pinball"))
-                {
-                    GameManager.instance.DeleteObject(collision.obj);
-                    continue;
-                }
+                GameManager.instance.DeleteObject(collision.obj);
+                continue;
+            }
+
+            // Collision between pinball and static object
+            if (collision.other.GetComponent<ICollider>().isStatic)
+            {
                 try
-                {
-                    Vector3 vNeg = collision.obj.transform.position - collision.point;
+                {  
+                    RigidBody rb = collision.obj.GetComponent<RigidBody>();
+                    Vector3 vNeg = rb.velocity;
                     Vector3 vNegNorm = Vector3.Dot(vNeg, collision.normal) * collision.normal;
                     Vector3 vPosNorm = -vNegNorm;
                     float j = (1f + collision.other.GetComponent<ICollider>().restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
-                    //Vector3 impulse = j * collision.normal / Time.fixedDeltaTime; // Avoid div by zero
-                    Vector3 impulse = j * collision.normal / Mathf.Max((Time.fixedDeltaTime - collision.time), 0.0001f); // Avoid div by zero
+                    Vector3 impulse = j * collision.normal;
                     collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
                     collision.obj.transform.position = collision.point;
 
@@ -76,6 +68,20 @@ public class CollisionManager : MonoBehaviour, IGameSystem
                 {
                     throw new System.Exception("No RigidBody attached to non-static object");
                 }
+            }
+            // Collision between pinballs
+            else if (collision.other.CompareTag("Pinball"))
+            {
+                RigidBody rb1 = collision.obj.GetComponent<RigidBody>();
+                RigidBody rb2 = collision.other.GetComponent<RigidBody>();
+
+                Vector3 v1 = rb1.velocity;
+                Vector3 v2 = rb2.velocity;
+
+                Vector3 v1Prime = v1 - (Vector3.Dot(v1 - v2, collision.normal) * 2 * rb2.mass / (rb1.mass + rb2.mass)) * collision.normal;
+                
+                //Debug.Log(rb1.name + " with " + v1Prime);
+                rb1.AddImpulse(v1Prime); 
             }
         }
 

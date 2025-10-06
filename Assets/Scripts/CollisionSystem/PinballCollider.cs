@@ -16,20 +16,21 @@ public class PinballCollider : CircleCollider
 
         switch (other)
         {
+            case PinballCollider otherPinball:
+                collision = IntersectsWithCircle(otherPinball, true);
+                return collision != null;
             case CircleCollider circle:
                 collision = IntersectsWithCircle(circle);
                 return collision != null;
             case BoxCollider square:
                 collision = IntersectsWithSquare(square);
                 return collision != null;
-            // case TriangleCollider triangle:
-            //     return IntersectsWithTriangle(triangle);
             default:
                 throw new System.Exception("Unknown collider type");
         }
     }
 
-    private Collision IntersectsWithCircle(CircleCollider other)
+    private Collision IntersectsWithCircle(CircleCollider other, bool otherIsPinball = false)
     {
         Vector3 difference = other.transform.position - transform.position;
 
@@ -37,7 +38,8 @@ public class PinballCollider : CircleCollider
         if (difference.magnitude > (radius + other.radius)) return null;
 
         // Find collision point, normal, and time
-        Vector3 v = rb.transform.position - rb.lastPos;
+        Vector3 v = rb.velocity;
+        if (otherIsPinball) v -= other.GetComponent<RigidBody>().velocity;
         Vector3 vNormalized = v.normalized;
         Vector3 C = other.transform.position - rb.lastPos;
         Vector3 D = Vector3.Dot(C, vNormalized) * vNormalized;

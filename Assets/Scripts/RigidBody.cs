@@ -1,12 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RigidBody : MonoBehaviour
 {
-    public Vector3 velocity;
-    public Vector3 acceleration;
+    public bool gravity = false;
     public float mass = 1.0f;
 
+    [HideInInspector]
+    public Vector3 velocity;
+    [HideInInspector]
+    public Vector3 acceleration;
+    [HideInInspector]
     public Vector3 lastPos;
+
+    private List<Vector3> accumulatedImpulses = new List<Vector3>();
 
     void Start()
     {
@@ -26,11 +33,15 @@ public class RigidBody : MonoBehaviour
         // Update velocity based on acceleration
         velocity += acceleration * deltaTime;
 
+        foreach (Vector3 impulse in accumulatedImpulses)
+            velocity += impulse;
+
         // Update position based on velocity
         transform.position += velocity * deltaTime;
 
-        // Reset acceleration for the next frame
+        // Reset acceleration and remove accumulated impulses for next frame
         acceleration = Vector3.zero;
+        accumulatedImpulses.Clear();
 
     }
 
@@ -44,8 +55,9 @@ public class RigidBody : MonoBehaviour
     public void AddImpulse(Vector3 impulse)
     {
         // Impulse changes velocity directly
-        Vector3 impulseVelocityChange = impulse;
-        velocity += impulseVelocityChange;
+        //Vector3 impulseVelocityChange = impulse;
+        //velocity += impulseVelocityChange;
+        accumulatedImpulses.Add(impulse);
     }
 
     void OnDrawGizmos()

@@ -23,7 +23,8 @@ public class RigidBodyManager : MonoBehaviour, IGameSystem
     {
         foreach (RigidBody rb in rigidBodies)
         {
-            rb.acceleration += gravity.transform.position;
+            if (rb.gravity)
+                rb.acceleration += gravity.transform.position;
             rb.UpdateRigidBody(Time.fixedDeltaTime);
         }
     }

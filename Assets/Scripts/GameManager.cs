@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour, IGameSystem
     public GameObject pinballPrefab;
     public GameObject pinballSpawnPoint;
     private List<GameObject> objectsToDestroy = new List<GameObject>();
+    public int ticks = 0;
+    private int pinballsSpawned = 0;
 
     void Awake()
     {
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour, IGameSystem
         RigidBodyManager.instance.tick();
         CollisionManager.instance.tick();
         GameManager.instance.tick();
+        ticks++;
     }
 
     public void DeleteObject(GameObject obj)
@@ -46,8 +49,11 @@ public class GameManager : MonoBehaviour, IGameSystem
     {
         if (pinballCount < 2)
         {
-            pinballs.Add(Instantiate(pinballPrefab, pinballSpawnPoint.transform.position, Quaternion.identity));
+            Vector3 spawnLocation = pinballSpawnPoint.transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0, 0);
+            pinballs.Add(Instantiate(pinballPrefab, spawnLocation, Quaternion.identity));
+            pinballs[pinballs.Count-1].name = pinballs[pinballs.Count-1].name + " " + pinballsSpawned;
             pinballCount++;
+            pinballsSpawned++;
         }
     }
 

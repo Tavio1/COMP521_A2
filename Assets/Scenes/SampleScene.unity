@@ -1022,6 +1022,7 @@ MonoBehaviour:
   pinballCount: 0
   pinballPrefab: {fileID: 6060270488258517582, guid: b7c3c7a10cec0bc47993fa9b83bec4d1, type: 3}
   pinballSpawnPoint: {fileID: 19989571}
+  ticks: 0
 --- !u!1 &817143018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,7 +1980,7 @@ Transform:
   m_GameObject: {fileID: 1450729906}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -9}
+  m_LocalPosition: {x: 0, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2744,7 +2745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4714010b44018a54b90ed3be1c5024e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 0
+  isStatic: 1
   restitution: 1
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
@@ -2847,7 +2848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4714010b44018a54b90ed3be1c5024e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isStatic: 0
+  isStatic: 1
   restitution: 1
   maxCorner: {x: 0, y: 0, z: 0}
   minCorner: {x: 0, y: 0, z: 0}
