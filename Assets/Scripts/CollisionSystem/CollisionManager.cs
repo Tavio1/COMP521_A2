@@ -54,7 +54,7 @@ public class CollisionManager : MonoBehaviour, IGameSystem
                 float j = (1f + collision.other.GetComponent<ICollider>().restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
                 Vector3 impulse = j * collision.normal;
                 collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
-                collision.obj.transform.position = collision.point;
+                //collision.obj.transform.position = collision.point;
             }
             // Collision between pinballs
             else if (collision.other.CompareTag("Pinball"))
@@ -81,24 +81,8 @@ public class CollisionManager : MonoBehaviour, IGameSystem
                 float j = (1f + collision.other.GetComponent<ICollider>().restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
                 Vector3 impulse = j * collision.normal;
                 collision.obj.GetComponent<RigidBody>().AddImpulse(impulse);
-                collision.obj.transform.position = collision.point;
-
-                if (bRb.angularVelocity != 0f)
-                {
-                    BoxCollider bCol = collision.other.GetComponent<BoxCollider>();
-                    float boxLength = bCol.maxCorner.x - bCol.minCorner.x;
-                    if (collision.normal.Equals(Vector3.zero))
-                        collision.normal = bCol.transform.rotation * Vector3.back;
-
-                    Vector3 perp = new Vector3(-collision.normal.z, 0, collision.normal.x).normalized;
-                    Vector3 difference = collision.point - bRb.transform.position;
-                    float distanceAlongPaddle = Mathf.Abs(Vector3.Dot(difference, perp)) / boxLength;
-
-                    Vector3 impulse2 = distanceAlongPaddle * bRb.angularVelocity * collision.normal;
-                    collision.obj.GetComponent<RigidBody>().AddImpulse(impulse2);
-                    collision.obj.transform.position = collision.point;
-                }
-
+                if (!bRb.lastPos.Equals(bRb.transform.position))
+                    collision.obj.transform.position = collision.point + collision.normal * 0.1f;
             }
         }
 

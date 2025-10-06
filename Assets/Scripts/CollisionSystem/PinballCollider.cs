@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PinballCollider : CircleCollider
 {
@@ -72,90 +73,114 @@ public class PinballCollider : CircleCollider
             return null;
 
         // Find collision point, normal, and time
-        Vector3 collisionPoint = Vector3.zero;
+        Vector3 collisionPoint = rotatedLastPos;
         Vector3 collisionNormal = Vector3.zero;
         float collisionTime = 1; // Currently on 0-1 from beginnging to end, will convert to absolute time after
 
-        Vector3 v = Quaternion.Inverse(other.transform.rotation) * rb.velocity;
-
-        // Check each side individually, find the earliest collision
-
-        // Left 
-        if (rotatedLastPos.x + radius <= other.minCorner.x && sphereMaxX >= other.minCorner.x && v.x > 0)
+        // Chek if pinball was already inside the box
+        if ((rotatedLastPos.x >= other.minCorner.x - radius && rotatedLastPos.x <= other.maxCorner.x + radius ) &&
+            (rotatedLastPos.z >= other.minCorner.z - radius && rotatedLastPos.z <= other.maxCorner.z + radius))
         {
-            float t = (other.minCorner.x - (rotatedLastPos.x + radius)) / v.x;
-            if (t >= 0 && t <= 1 && t < collisionTime)
-            {
-                collisionTime = t;
-                collisionNormal = Vector3.left;
-            }
-        }
+            // Debug.Log("Pinball started inside square");
+            // Distances to each of the 4 sides
+            float dxMin = rotatedLastPos.x - other.minCorner.x;   // left face
+            float dxMax = other.maxCorner.x - rotatedLastPos.x;   // right face
+            float dzMin = rotatedLastPos.z - other.minCorner.z;   // bottom face
+            float dzMax = other.maxCorner.z - rotatedLastPos.z;   // top face
 
-        // Right
-        if (rotatedLastPos.x - radius >= other.maxCorner.x && sphereMinX <= other.maxCorner.x && v.x < 0)
+            // Find the smallest distance
+            float minDist = dxMin;
+            collisionNormal = Vector3.left;
+
+            if (dxMax < minDist) { minDist = dxMax; collisionNormal = Vector3.right; }
+            if (dzMin < minDist) { minDist = dzMin; collisionNormal = Vector3.back; }
+            if (dzMax < minDist) { minDist = dzMax; collisionNormal = Vector3.forward; }
+
+            collisionPoint = rotatedLastPos;
+            collisionTime = 0;
+        }
+        // Else, it started outside of the box so calculate the intersection
+        else
         {
-            float t = (other.maxCorner.x - (rotatedLastPos.x - radius)) / v.x;
-            if (t >= 0 && t <= 1 && t < collisionTime)
+            Vector3 v = Quaternion.Inverse(other.transform.rotation) * rb.velocity;
+
+            // Check each side individually, find the earliest collision
+
+            // Left 
+            if (rotatedLastPos.x + radius <= other.minCorner.x && sphereMaxX >= other.minCorner.x && v.x > 0)
             {
-                collisionTime = t;
-                collisionNormal = Vector3.right;
+                float t = (other.minCorner.x - (rotatedLastPos.x + radius)) / v.x;
+                if (t >= 0 && t <= 1 && t < collisionTime)
+                {
+                    collisionTime = t;
+                    collisionNormal = Vector3.left;
+                }
             }
-        }
 
-        // Bottom 
-        if (rotatedLastPos.z + radius <= other.minCorner.z && sphereMaxZ >= other.minCorner.z && v.z > 0)
-        {
-            float t = (other.minCorner.z - (rotatedLastPos.z + radius)) / v.z;
-            if (t >= 0 && t <= 1 && t < collisionTime)
+            // Right
+            if (rotatedLastPos.x - radius >= other.maxCorner.x && sphereMinX <= other.maxCorner.x && v.x < 0)
             {
-                collisionTime = t;
-                collisionNormal = Vector3.back;
+                float t = (other.maxCorner.x - (rotatedLastPos.x - radius)) / v.x;
+                if (t >= 0 && t <= 1 && t < collisionTime)
+                {
+                    collisionTime = t;
+                    collisionNormal = Vector3.right;
+                }
             }
-        }
 
-        // Top
-        if (rotatedLastPos.z - radius >= other.maxCorner.z && sphereMinZ <= other.maxCorner.z && v.z < 0)
-        {
-            float t = (other.maxCorner.z - (rotatedLastPos.z - radius)) / v.z;
-            if (t >= 0 && t <= 1 && t < collisionTime)
+            // Bottom 
+            if (rotatedLastPos.z + radius <= other.minCorner.z && sphereMaxZ >= other.minCorner.z && v.z > 0)
             {
-                collisionTime = t;
-                collisionNormal = Vector3.forward;
+                float t = (other.minCorner.z - (rotatedLastPos.z + radius)) / v.z;
+                if (t >= 0 && t <= 1 && t < collisionTime)
+                {
+                    collisionTime = t;
+                    collisionNormal = Vector3.back;
+                }
             }
-        }
 
-        // Check corners
-        for (int i = 0; i < other.corners.Length; i++)
-        { 
-            
-            Vector3 corner = other.corners[i];
-            corner = new Vector3(corner.x, 0, corner.z);
-
-            Vector3 difference = rotatedLastPos - corner;
-            float a = Vector3.Dot(v, v);
-            float b = 2f * Vector3.Dot(v, difference);
-            float c = Vector3.Dot(difference, difference) - radius * radius;
-
-            float discriminant = b * b - 4f * a * c;
-            if (discriminant < 0f)
-                continue; // no intersection
-
-            float sqrtD = Mathf.Sqrt(discriminant);
-            float t1 = (-b - sqrtD) / (2f * a);
-            float t2 = (-b + sqrtD) / (2f * a);
-
-            // We want the earliest positive t in [0,1]
-            float t = Mathf.Min(t1, t2);
-            if (t < 0f || t > 1f)
-                continue;
-
-            if (t < collisionTime)
+            // Top
+            if (rotatedLastPos.z - radius >= other.maxCorner.z && sphereMinZ <= other.maxCorner.z && v.z < 0)
             {
-                collisionTime = t;
-                Vector3 hitPos = rotatedLastPos + v * t;
-                collisionNormal = (hitPos - corner).normalized;
-                Debug.Log("hit pos: " + hitPos + " rotatedLastPos: " + rotatedLastPos + " v: " + v + " t: " + t);
-                Debug.Log("corner collision at " + hitPos + " with normal " + collisionNormal + " with corner at " + corner);
+                float t = (other.maxCorner.z - (rotatedLastPos.z - radius)) / v.z;
+                if (t >= 0 && t <= 1 && t < collisionTime)
+                {
+                    collisionTime = t;
+                    collisionNormal = Vector3.forward;
+                }
+            }
+
+            // Check corners
+            for (int i = 0; i < other.corners.Length; i++)
+            { 
+                
+                Vector3 corner = other.corners[i];
+                corner = new Vector3(corner.x, 0, corner.z);
+
+                Vector3 difference = rotatedLastPos - corner;
+                float a = Vector3.Dot(v, v);
+                float b = 2f * Vector3.Dot(v, difference);
+                float c = Vector3.Dot(difference, difference) - radius * radius;
+
+                float discriminant = b * b - 4f * a * c;
+                if (discriminant < 0f)
+                    continue; // no intersection
+
+                float sqrtD = Mathf.Sqrt(discriminant);
+                float t1 = (-b - sqrtD) / (2f * a);
+                float t2 = (-b + sqrtD) / (2f * a);
+
+                // We want the earliest positive t in [0,1]
+                float t = Mathf.Min(t1, t2);
+                if (t < 0f || t > 1f)
+                    continue;
+
+                if (t < collisionTime)
+                {
+                    collisionTime = t;
+                    Vector3 hitPos = rotatedLastPos + v * t;
+                    collisionNormal = (hitPos - corner).normalized;
+                }
             }
         }
 
@@ -168,6 +193,9 @@ public class PinballCollider : CircleCollider
 
         // Convert to actual time step, not a percent
         collisionTime = collisionTime * Time.fixedDeltaTime;
+
+        // if (collisionNormal.Equals(Vector3.zero))
+        //     Debug.Log("lastPos: " + rotatedLastPos + " boxMax: " + other.maxCorner + " boxMin: " + other.minCorner  );
 
         Collision collision = new Collision(this.gameObject, other.gameObject, collisionPoint, collisionNormal, collisionTime);
 

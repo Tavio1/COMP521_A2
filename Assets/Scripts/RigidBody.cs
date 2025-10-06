@@ -9,14 +9,9 @@ public class RigidBody : MonoBehaviour
     [HideInInspector]
     public Vector3 velocity;
     [HideInInspector]
-
-    public float angularVelocity;
-    [HideInInspector]
     public Vector3 acceleration;
     [HideInInspector]
     public Vector3 lastPos;
-    [HideInInspector]
-    public Quaternion lastRot;
 
     private List<Vector3> accumulatedImpulses = new List<Vector3>();
 
@@ -26,20 +21,14 @@ public class RigidBody : MonoBehaviour
         velocity = Vector3.zero;
         acceleration = Vector3.zero;
         lastPos = transform.position;
-        angularVelocity = 0f;
 
         RigidBodyManager.instance.AddRigidBody(this);
     }
 
     public void UpdateRigidBody(float deltaTime)
     {
-        // Store angular velocity
-        float deltaAngle = Mathf.DeltaAngle(transform.rotation.eulerAngles.y, lastRot.eulerAngles.y);
-        angularVelocity = deltaAngle / deltaTime;
-
         // Store the previous position
         lastPos = transform.position;
-        lastRot = transform.rotation;
 
         // Update velocity based on acceleration
         velocity += acceleration * deltaTime;
