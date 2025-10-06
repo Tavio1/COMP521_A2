@@ -132,5 +132,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 1
-  restitution: 1.5
+  restitution: 2
   radius: 0.75
