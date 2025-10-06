@@ -76,7 +76,7 @@ public class PinballCollider : CircleCollider
         Vector3 collisionNormal = Vector3.zero;
         float collisionTime = 1; // Currently on 0-1 from beginnging to end, will convert to absolute time after
 
-        Vector3 v = rotatedPos - rotatedLastPos;
+        Vector3 v = Quaternion.Inverse(other.transform.rotation) * rb.velocity;
 
         // Check each side individually, find the earliest collision
 
@@ -124,12 +124,49 @@ public class PinballCollider : CircleCollider
             }
         }
 
-        // Create collision
+        // Check corners
+        for (int i = 0; i < other.corners.Length; i++)
+        { 
+            
+            Vector3 corner = other.corners[i];
+            corner = new Vector3(corner.x, 0, corner.z);
+
+            Vector3 difference = rotatedLastPos - corner;
+            float a = Vector3.Dot(v, v);
+            float b = 2f * Vector3.Dot(v, difference);
+            float c = Vector3.Dot(difference, difference) - radius * radius;
+
+            float discriminant = b * b - 4f * a * c;
+            if (discriminant < 0f)
+                continue; // no intersection
+
+            float sqrtD = Mathf.Sqrt(discriminant);
+            float t1 = (-b - sqrtD) / (2f * a);
+            float t2 = (-b + sqrtD) / (2f * a);
+
+            // We want the earliest positive t in [0,1]
+            float t = Mathf.Min(t1, t2);
+            if (t < 0f || t > 1f)
+                continue;
+
+            if (t < collisionTime)
+            {
+                collisionTime = t;
+                Vector3 hitPos = rotatedLastPos + v * t;
+                collisionNormal = (hitPos - corner).normalized;
+                Debug.Log("hit pos: " + hitPos + " rotatedLastPos: " + rotatedLastPos + " v: " + v + " t: " + t);
+                Debug.Log("corner collision at " + hitPos + " with normal " + collisionNormal + " with corner at " + corner);
+            }
+        }
+
+        // Convert to world space
         collisionPoint = Vector3.Lerp(rotatedLastPos, rotatedPos, collisionTime);
         collisionPoint = other.LocalToWorld(collisionPoint);
 
+        // Convert to world space
         collisionNormal = other.transform.rotation * collisionNormal;
 
+        // Convert to actual time step, not a percent
         collisionTime = collisionTime * Time.fixedDeltaTime;
 
         Collision collision = new Collision(this.gameObject, other.gameObject, collisionPoint, collisionNormal, collisionTime);
