@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour, IGameSystem
 
     void FixedUpdate()
     {
+        PlayerManager.instance.tick();
         RigidBodyManager.instance.tick();
         CollisionManager.instance.tick();
         GameManager.instance.tick();
