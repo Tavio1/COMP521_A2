@@ -115,7 +115,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: -0.433}
-  m_LocalScale: {x: 1.1, y: 1, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4233261663046754264}
@@ -187,8 +187,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 1
   restitution: 0.25
-  maxCorner: {x: 0, y: 0, z: 0}
-  minCorner: {x: 0, y: 0, z: 0}
+  collidingWith: []
+  maxCorner: {x: 1.1, y: 0, z: 0.25}
+  minCorner: {x: -1.1, y: 0, z: -0.25}
+  scale: {x: 1.1, y: 1, z: 1}
 --- !u!1 &1754885830550860115
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +345,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.5, z: 0, w: 0.8660254}
   m_LocalPosition: {x: -0.25, y: -0.5, z: 0}
-  m_LocalScale: {x: 1.1, y: 1, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4233261663046754264}
@@ -415,8 +417,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 1
   restitution: 0.25
-  maxCorner: {x: 0, y: 0, z: 0}
-  minCorner: {x: 0, y: 0, z: 0}
+  collidingWith: []
+  maxCorner: {x: 1.1, y: 0, z: 0.25}
+  minCorner: {x: -1.1, y: 0, z: -0.25}
+  scale: {x: 1.1, y: 1, z: 1}
 --- !u!1 &6114189686576566179
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +536,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0.25, y: -0.5, z: 0}
-  m_LocalScale: {x: 1.1, y: 1, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4233261663046754264}
@@ -604,8 +608,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStatic: 1
   restitution: 0.25
-  maxCorner: {x: 0, y: 0, z: 0}
-  minCorner: {x: 0, y: 0, z: 0}
+  collidingWith: []
+  maxCorner: {x: 1.1, y: 0, z: 0.25}
+  minCorner: {x: -1.1, y: 0, z: -0.25}
+  scale: {x: 1.1, y: 1, z: 1}
 --- !u!1 &8577450907878957537
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,20 +3,16 @@ public class BoxCollider : ICollider
 {
     public Vector3 maxCorner;
     public Vector3 minCorner;
-    private Vector3[] corners = new Vector3[4];
+    // private Vector3[] corners = new Vector3[4];
+    public Vector3 scale = Vector3.one;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void Start()
     {
         base.Start();
-        maxCorner = new Vector3(transform.localScale.x / 2, 0, transform.localScale.z / 2);
-        minCorner = new Vector3(-transform.localScale.x / 2, 0, -transform.localScale.z / 2);
-
-        corners[0] = new Vector3(transform.localScale.x / 2, 0, transform.localScale.z / 2);
-        corners[1] = new Vector3(transform.localScale.x / 2, 0, -transform.localScale.z / 2);
-        corners[2] = new Vector3(-transform.localScale.x / 2, 0, -transform.localScale.z / 2);
-        corners[3] = new Vector3(-transform.localScale.x / 2, 0, transform.localScale.z / 2);
+        maxCorner = new Vector3(transform.lossyScale.x * scale.x / 2, 0, transform.lossyScale.z * scale.z / 2);
+        minCorner = new Vector3(-transform.lossyScale.x * scale.x / 2, 0, -transform.lossyScale.z * scale.z / 2);
     }
 
     public Vector3[] LocalToWorld(Vector3[] vecs)
@@ -40,10 +36,18 @@ public class BoxCollider : ICollider
         return transform.rotation * vec + transform.position;
     }
 
-
+    void OnValidate()
+    { 
+        maxCorner = new Vector3(transform.lossyScale.x * scale.x / 2, 0, transform.lossyScale.z * scale.z / 2);
+        minCorner = new Vector3(-transform.lossyScale.x * scale.x / 2, 0, -transform.lossyScale.z * scale.z / 2);
+    }
 
     void OnDrawGizmosSelected()
     {
+        Vector3[] corners = { new Vector3(maxCorner.x, 0.5f, maxCorner.z),
+                              new Vector3(maxCorner.x, 0.5f, minCorner.z),
+                              new Vector3(minCorner.x, 0.5f, minCorner.z),
+                              new Vector3(minCorner.x, 0.5f, maxCorner.z)};
         Vector3[] rotatedCorners = LocalToWorld(corners);
         Gizmos.color = Color.green;
         Gizmos.DrawLine(rotatedCorners[0], rotatedCorners[1]);
