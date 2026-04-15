@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,8 +57,12 @@ public class CollisionManager : MonoBehaviour, IGameSystem
                 RigidBody rb = collision.obj.GetComponent<RigidBody>();
                 Vector3 vNeg = rb.velocity;
                 Vector3 vNegNorm = Vector3.Dot(vNeg, collision.normal) * collision.normal;
-                float j = (1f + collision.other.GetComponent<ICollider>().restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
+                float restitution = collision.other.GetComponent<ICollider>().restitution;
+                float j = (1f + restitution) * collision.obj.GetComponent<RigidBody>().mass * vNegNorm.magnitude;
                 Vector3 impulse = j * collision.normal;
+
+                if (restitution > 1) UIManager.instance.AddPoints(250);
+                else if (restitution < 0.5) UIManager.instance.AddPoints(100);
 
                 // Add the impulse force
                 rb.AddImpulse(impulse);

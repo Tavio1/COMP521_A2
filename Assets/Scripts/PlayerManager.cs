@@ -52,6 +52,10 @@ public class PlayerManager : MonoBehaviour, IGameSystem
     // Test for inputs
     void Update()
     {
+        // Disallow inputs once game is over
+        if (GameManager.instance.gameOver)
+            return;
+
         // Store inputs related to movement to be ticked in proper time
         leftBumperActive = Input.GetKey(KeyCode.A);
         rightBumperActive = Input.GetKey(KeyCode.D);

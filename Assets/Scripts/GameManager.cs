@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour, IGameSystem
 {
     public static GameManager instance;
+    public bool gameOver = false;
     [HideInInspector]
     public List<GameObject> pinballs = new List<GameObject>(); // List of all current pinballs
     [HideInInspector]
@@ -11,7 +12,8 @@ public class GameManager : MonoBehaviour, IGameSystem
     public GameObject pinballPrefab;
     private List<GameObject> objectsToDestroy = new List<GameObject>(); // List of objects to destroy at the end of the frame
     public int ticks = 0; // Total count of frames
-    private int pinballsSpawned = 0; // Total count of pinballs spawned (used for naming and debugging)
+    [HideInInspector]
+    public int pinballsSpawned = 0; // Total count of pinballs spawned (used for naming, debugging, and game over logic)
 
     [Header("Debug")]
     public bool spawnHazards = true;
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour, IGameSystem
         bool posValid = false;
 
         // Spawn 7 hazards at random locations
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 5; i++)
         {
             // Generate random locations until we've found one far enough away from all others
             posValid = false;
@@ -67,7 +69,7 @@ public class GameManager : MonoBehaviour, IGameSystem
             spawnLocations.Add(selectedPos);
 
             // Spawn obstacle at the selected location
-            GameObject obstacle = i < 3 ? circlePrefab : trianglePrefab; // Spawn 3 circles and 4 triangles
+            GameObject obstacle = i < 2 ? circlePrefab : trianglePrefab; // Spawn 3 circles and 4 triangles
             Quaternion rotation = Quaternion.Euler(new Vector3(0, Random.Range(10, 50), 0)); // Randomize the rotation to avoid flat edge on triangles
             Instantiate(obstacle, selectedPos, rotation, hazardParent.transform);
         }
@@ -114,12 +116,13 @@ public class GameManager : MonoBehaviour, IGameSystem
     // Spawns a pinball if there is less than 2
     public void TrySpawnPinball()
     {
-        if (pinballCount < 2)
+        if (pinballCount < 2 && pinballsSpawned < 3)
         {
             pinballs.Add(Instantiate(pinballPrefab, GeneratePinballSpawn(), Quaternion.identity));
             pinballs[pinballs.Count - 1].name = pinballs[pinballs.Count - 1].name + " " + pinballsSpawned;
             pinballCount++;
             pinballsSpawned++;
+            UIManager.instance.UpdatePinball();
         }
     }
 
@@ -132,6 +135,12 @@ public class GameManager : MonoBehaviour, IGameSystem
         pinballCount--;
         pinballs.Remove(pinball);
         RemoveObject(pinball);
+
+        if (pinballsSpawned >= 3)
+        {
+            gameOver = true;
+            UIManager.instance.EndGame();
+        }
     }
 
     // Destroys any objects marked for deletion
